@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,8 @@ public class UserController {
 	@Autowired
 	private CartRepository cartRepository;
 
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@GetMapping("/id/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		return ResponseEntity.of(userRepository.findById(id));
@@ -46,10 +49,11 @@ public class UserController {
 		user.setUsername(createUserRequest.getUsername());
 		Cart cart = new Cart();
 		cartRepository.save(cart);
+		user.setCart(cart);
 		if (createUserRequest.getPasword().length() < 7 || !createUserRequest.getPasword().equals(createUserRequest.getConfirmPassword())) {
 			return ResponseEntity.badRequest().build();
 		}
-		user.setCart(cart);
+		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPasword()));
 		userRepository.save(user);
 		return ResponseEntity.ok(user);
 	}
