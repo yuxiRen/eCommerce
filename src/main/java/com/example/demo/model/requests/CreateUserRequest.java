@@ -7,19 +7,21 @@ public class CreateUserRequest {
 	@JsonProperty
 	private String username;
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@JsonProperty
-	private String pasword;
+	private String password;
 
 	@JsonProperty
 	private String confirmPassword;
 
-	public String getPasword() {
-		return pasword;
-	}
 
-	public void setPasword(String pasword) {
-		this.pasword = pasword;
-	}
 
 	public String getConfirmPassword() {
 		return confirmPassword;
