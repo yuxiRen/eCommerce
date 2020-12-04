@@ -18,6 +18,7 @@ import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
 
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -45,6 +46,9 @@ public class UserController {
 		user.setUsername(createUserRequest.getUsername());
 		Cart cart = new Cart();
 		cartRepository.save(cart);
+		if (createUserRequest.getPasword().length() < 7 || !createUserRequest.getPasword().equals(createUserRequest.getConfirmPassword())) {
+			return ResponseEntity.badRequest().build();
+		}
 		user.setCart(cart);
 		userRepository.save(user);
 		return ResponseEntity.ok(user);
