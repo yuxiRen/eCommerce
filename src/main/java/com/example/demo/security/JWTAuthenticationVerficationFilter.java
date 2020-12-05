@@ -1,4 +1,5 @@
 package com.example.demo.security;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,17 +13,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilter{
-    public JWTAuthenticationVerficationFilter(AuthenticationManager authManager) {
-        super(authManager);
+
+import static com.example.demo.security.SecurityConstants.*;
+
+public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilter {
+
+    public JWTAuthenticationVerficationFilter(AuthenticationManager authenticationManager) {
+        super(authenticationManager);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req,
                                     HttpServletResponse res,
                                     FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader(SecurityConstants.HEADER_STRING);
-        if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+        String header = req.getHeader(HEADER_STRING);
+
+        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
             chain.doFilter(req, res);
             return;
         }
@@ -34,11 +40,12 @@ public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilte
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(SecurityConstants.HEADER_STRING);
+        String token = request.getHeader(HEADER_STRING);
         if (token != null) {
-            String user = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
+            // parse the token.
+            String user = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
                     .build()
-                    .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+                    .verify(token.replace(TOKEN_PREFIX, ""))
                     .getSubject();
 
             if (user != null) {
@@ -48,4 +55,5 @@ public class JWTAuthenticationVerficationFilter extends BasicAuthenticationFilte
         }
         return null;
     }
+
 }
