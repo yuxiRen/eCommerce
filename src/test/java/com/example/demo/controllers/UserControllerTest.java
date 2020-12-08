@@ -53,7 +53,6 @@ class UserControllerTest {
     public void createUserHappyPath() throws Exception {
         when(encoder.encode("testPassword")).thenReturn("thisIsHashed");
         CreateUserRequest createUserRequest = new CreateUserRequest();
-
         createUserRequest.setUsername("test");
         createUserRequest.setPassword("testPassword");
         createUserRequest.setConfirmPassword("testPassword");
