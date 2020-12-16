@@ -44,16 +44,7 @@ public class CartControllerTest {
         item.setDescription("California Red Apple");
         itemOptional = Optional.of(item);
     }
-    @Test
-    void addTocart() {
-        when(userRepository.findByUsername("Test")).thenReturn(createTestUser());
-        when(cartRepository.findById(1L)).thenReturn(itemOptional);
-        ModifyCartRequest modifyCartRequest = new ModifyCartRequest();
-        modifyCartRequest.setItemId();
 
-
-
-    }
     private User createTestUser() {
         User user = new User();
         user.setId(1L);
